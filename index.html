@@ -32,6 +32,68 @@ body{background:var(--cream);color:var(--ink);font-family:var(--hv);min-height:1
 .masthead-tag{font-family:var(--mono);font-size:9px;color:var(--ink4);letter-spacing:.1em;margin-top:3px}
 .back-btn{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.06em;cursor:pointer;border:1px solid var(--rule);padding:5px 12px;border-radius:2px;background:transparent;transition:all .15s;display:none}
 .back-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.list-btn{font-family:var(--mono);font-size:10px;color:var(--cream);letter-spacing:.06em;cursor:pointer;border:1px solid var(--ink);padding:6px 16px;border-radius:2px;background:var(--ink);transition:all .15s}
+.list-btn:hover{background:var(--green);border-color:var(--green)}
+.ob-page{max-width:760px;margin:0 auto;padding:2.5rem 2rem 4rem}
+.ob-intro{margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:1px solid var(--rule)}
+.ob-title{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.ob-title em{font-style:italic}
+.ob-sub{font-family:var(--hv);font-size:14px;color:var(--ink3);line-height:1.6;max-width:540px}
+.ob-steps{display:flex;gap:0;margin-bottom:2.5rem;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.ob-step{flex:1;padding:8px 12px;text-align:center;background:var(--cream2);border-right:1px solid var(--rule);transition:all .2s}
+.ob-step:last-child{border-right:none}
+.ob-step.active{background:var(--ink)}
+.ob-step.done{background:var(--green-bg);border-color:var(--green-rule)}
+.ob-step-num{font-family:var(--serif);font-size:15px;font-weight:700;display:block;color:var(--ink2)}
+.ob-step.active .ob-step-num{color:var(--cream)}
+.ob-step.done .ob-step-num{color:var(--green)}
+.ob-step-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--ink3);display:block;margin-top:1px}
+.ob-step.active .ob-step-lbl{color:#a09080}
+.ob-step.done .ob-step-lbl{color:var(--green)}
+.ob-section{display:none}
+.ob-section.active{display:block}
+.ob-section-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.ob-section-sub{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.08em;margin-bottom:1.5rem}
+.ob-field{margin-bottom:16px}
+.ob-label{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.08em;display:block;margin-bottom:5px}
+.ob-hint{font-family:var(--mono);font-size:9px;color:var(--ink4);margin-top:4px;letter-spacing:.03em}
+.ob-input{width:100%;background:var(--cream);border:1px solid var(--rule);color:var(--ink);font-family:var(--hv);font-size:13px;padding:9px 12px;border-radius:2px;outline:none;transition:border-color .15s}
+.ob-input:focus{border-color:var(--ink)}
+.ob-input::placeholder{color:var(--ink4)}
+textarea.ob-input{resize:vertical;min-height:80px}
+.ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ob-check-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;cursor:pointer}
+.ob-check{width:16px;height:16px;border:1px solid var(--rule);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green);background:var(--cream);transition:all .15s}
+.ob-check.checked{background:var(--green-bg);border-color:var(--green-rule)}
+.ob-check-label{font-family:var(--hv);font-size:13px;color:var(--ink2)}
+.ob-pricing-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.ob-price-card{border:1px solid var(--rule);padding:12px;border-radius:2px;cursor:pointer;transition:all .15s}
+.ob-price-card:hover{border-color:var(--ink3)}
+.ob-price-card.sel{background:var(--ink);border-color:var(--ink)}
+.ob-price-label{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.06em;margin-bottom:4px}
+.ob-price-card.sel .ob-price-label{color:#a09080}
+.ob-price-val{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink)}
+.ob-price-card.sel .ob-price-val{color:#fff}
+.ob-price-sub{font-family:var(--mono);font-size:9px;color:var(--ink4);margin-top:2px}
+.ob-price-card.sel .ob-price-sub{color:#a09080}
+.ob-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--rule)}
+.ob-btn-prev{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.06em;cursor:pointer;border:1px solid var(--rule);padding:8px 18px;border-radius:2px;background:transparent;transition:all .15s}
+.ob-btn-prev:hover{border-color:var(--ink3);color:var(--ink)}
+.ob-btn-next{font-family:var(--mono);font-size:10px;color:var(--cream);letter-spacing:.06em;cursor:pointer;border:none;padding:9px 22px;border-radius:2px;background:var(--ink);transition:all .15s}
+.ob-btn-next:hover{background:var(--green)}
+.ob-preview{background:var(--cream2);border:1px solid var(--rule);padding:1.25rem;border-radius:2px;margin-top:1.5rem}
+.ob-preview-label{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.1em;margin-bottom:10px}
+.ob-preview-name{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.ob-preview-loc{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-bottom:10px}
+.ob-preview-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.ob-preview-val{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink)}
+.ob-preview-key{font-family:var(--mono);font-size:8px;color:var(--ink3);margin-top:2px;letter-spacing:.05em}
+.ob-success{text-align:center;padding:3rem 2rem;display:none}
+.ob-success-icon{font-size:40px;margin-bottom:1rem}
+.ob-success-title{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.ob-success-sub{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.06em;line-height:1.8;margin-bottom:1.5rem}
+.ob-success-btn{font-family:var(--mono);font-size:10px;color:var(--cream);letter-spacing:.06em;cursor:pointer;border:none;padding:10px 24px;border-radius:2px;background:var(--ink);transition:all .15s}
+.ob-success-btn:hover{background:var(--green)}
 
 /* ── PAGES ── */
 #page-listings{display:block}
@@ -258,6 +320,281 @@ textarea.form-input{resize:vertical;min-height:70px}
     <div class="masthead-tag">EST. 2026</div>
   </div>
   <button class="back-btn" id="back-btn" onclick="showListings()">← ALL LISTINGS</button>
+  <button class="list-btn" id="list-btn" onclick="showOnboarding()">List your space →</button>
+</div>
+
+<!-- ══ ONBOARDING PAGE ══ -->
+<div id="page-onboarding" style="display:none">
+  <div class="ob-page">
+    <div class="ob-intro">
+      <div class="ob-title">List your <em>space</em></div>
+      <div class="ob-sub">Tell us about your available capacity. Your listing stays private until you approve each introduction. Takes about 5 minutes.</div>
+    </div>
+    <div class="ob-steps" id="ob-stepbar">
+      <div class="ob-step active" id="obs-1"><span class="ob-step-num">①</span><span class="ob-step-lbl">YOUR FACILITY</span></div>
+      <div class="ob-step" id="obs-2"><span class="ob-step-num">②</span><span class="ob-step-lbl">CAPACITY</span></div>
+      <div class="ob-step" id="obs-3"><span class="ob-step-num">③</span><span class="ob-step-lbl">CONNECTIVITY</span></div>
+      <div class="ob-step" id="obs-4"><span class="ob-step-num">④</span><span class="ob-step-lbl">PRICING</span></div>
+      <div class="ob-step" id="obs-5"><span class="ob-step-num">⑤</span><span class="ob-step-lbl">PREVIEW</span></div>
+    </div>
+
+    <div id="ob-form">
+
+      <!-- STEP 1 — FACILITY -->
+      <div class="ob-section active" id="ob-s1">
+        <div class="ob-section-title">Your facility</div>
+        <div class="ob-section-sub">BASIC DETAILS — VISIBLE TO ALL BUYERS AT TIER 1</div>
+        <div class="ob-grid">
+          <div class="ob-field">
+            <label class="ob-label">COMPANY NAME</label>
+            <input class="ob-input" type="text" id="ob-company" placeholder="e.g. Acme Data Centers">
+            <div class="ob-hint">Not shown publicly until tier 3 is unlocked</div>
+          </div>
+          <div class="ob-field">
+            <label class="ob-label">CONTACT EMAIL</label>
+            <input class="ob-input" type="email" id="ob-email" placeholder="sales@yourdomain.com">
+          </div>
+        </div>
+        <div class="ob-grid">
+          <div class="ob-field">
+            <label class="ob-label">METRO REGION (PUBLIC)</label>
+            <select class="ob-input" id="ob-region">
+              <option value="">Select region...</option>
+              <option>Northern Virginia metro</option>
+              <option>New York / New Jersey metro</option>
+              <option>Chicago metro</option>
+              <option>Dallas metro</option>
+              <option>Phoenix metro</option>
+              <option>Silicon Valley metro</option>
+              <option>Seattle metro</option>
+              <option>Atlanta metro</option>
+              <option>Amsterdam metro</option>
+              <option>Frankfurt metro</option>
+              <option>London metro</option>
+              <option>Paris metro</option>
+              <option>Singapore metro</option>
+              <option>Tokyo metro</option>
+              <option>Osaka metro</option>
+              <option>Sydney metro</option>
+            </select>
+            <div class="ob-hint">Exact city shown only at tier 2 after buyer expresses interest</div>
+          </div>
+          <div class="ob-field">
+            <label class="ob-label">EXACT CITY / CAMPUS (TIER 2)</label>
+            <input class="ob-input" type="text" id="ob-city" placeholder="e.g. Ashburn, Virginia">
+            <div class="ob-hint">Revealed only after buyer clicks express interest</div>
+          </div>
+        </div>
+        <div class="ob-field">
+          <label class="ob-label">FACILITY TYPE</label>
+          <select class="ob-input" id="ob-type">
+            <option value="">Select type...</option>
+            <option>Colocation — multi-tenant</option>
+            <option>Colocation — single tenant available</option>
+            <option>Hyperscale campus</option>
+            <option>Edge facility</option>
+          </select>
+        </div>
+        <div class="ob-nav">
+          <span></span>
+          <button class="ob-btn-next" onclick="obNext(1)">Capacity details →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 — CAPACITY -->
+      <div class="ob-section" id="ob-s2">
+        <div class="ob-section-title">Available capacity</div>
+        <div class="ob-section-sub">DESCRIBE THE BLOCK YOU ARE LISTING — ONE LISTING PER BLOCK</div>
+        <div class="ob-grid">
+          <div class="ob-field">
+            <label class="ob-label">AVAILABLE POWER (kW)</label>
+            <input class="ob-input" type="number" id="ob-kw" placeholder="e.g. 50">
+            <div class="ob-hint">The specific block available on flexible terms</div>
+          </div>
+          <div class="ob-field">
+            <label class="ob-label">EXPANDABLE TO (kW)</label>
+            <input class="ob-input" type="number" id="ob-kw-max" placeholder="e.g. 200">
+            <div class="ob-hint">Maximum if buyer needs to grow</div>
+          </div>
+        </div>
+        <div class="ob-grid">
+          <div class="ob-field">
+            <label class="ob-label">MAX DENSITY PER RACK</label>
+            <select class="ob-input" id="ob-density">
+              <option value="">Select...</option>
+              <option>Standard (3–5 kW/rack)</option>
+              <option>Medium density (5–10 kW/rack)</option>
+              <option>High density (10–20 kW/rack)</option>
+              <option>Ultra-high density (20–30 kW/rack)</option>
+              <option>AI-optimised (30 kW+/rack)</option>
+            </select>
+          </div>
+          <div class="ob-field">
+            <label class="ob-label">POWER REDUNDANCY</label>
+            <select class="ob-input" id="ob-power">
+              <option value="">Select...</option>
+              <option>N (no redundancy)</option>
+              <option>N+1</option>
+              <option>2N (fully redundant)</option>
+              <option>2N+1</option>
+              <option>3N</option>
+            </select>
+          </div>
+        </div>
+        <div class="ob-field">
+          <label class="ob-label">COOLING TYPE</label>
+          <select class="ob-input" id="ob-cooling">
+            <option value="">Select...</option>
+            <option>Air cooling (standard)</option>
+            <option>Hot aisle / cold aisle containment</option>
+            <option>Chilled water</option>
+            <option>Direct liquid cooling available</option>
+            <option>Immersion cooling available</option>
+            <option>Adiabatic / free cooling</option>
+          </select>
+        </div>
+        <div class="ob-field">
+          <label class="ob-label">AVAILABILITY DATE</label>
+          <select class="ob-input" id="ob-avail">
+            <option value="">Select...</option>
+            <option>Immediately</option>
+            <option>Within 1 week</option>
+            <option>Within 2 weeks</option>
+            <option>Within 30 days</option>
+            <option>30–60 days</option>
+            <option>60–90 days</option>
+          </select>
+        </div>
+        <div class="ob-nav">
+          <button class="ob-btn-prev" onclick="obPrev(2)">← Back</button>
+          <button class="ob-btn-next" onclick="obNext(2)">Connectivity →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 — CONNECTIVITY -->
+      <div class="ob-section" id="ob-s3">
+        <div class="ob-section-title">Connectivity & certifications</div>
+        <div class="ob-section-sub">SELECT ALL THAT APPLY</div>
+        <div class="ob-label" style="margin-bottom:10px">CONNECTIVITY OPTIONS</div>
+        <div id="ob-conn-list">
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">Cross-connect</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">Dark fiber available</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">Internet exchange (IXP) access</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">100G uplinks</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">400G uplinks</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">Carrier-neutral</span></div>
+        </div>
+        <div class="ob-divider"></div>
+        <div class="ob-label" style="margin-bottom:10px">CERTIFICATIONS</div>
+        <div id="ob-cert-list">
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">SOC 2 Type II</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">ISO 27001</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">ISO 50001 (energy management)</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">PCI-DSS</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">HIPAA compliant</span></div>
+          <div class="ob-check-row" onclick="obToggle(this)"><div class="ob-check">✓</div><span class="ob-check-label">FISMA / FedRAMP</span></div>
+        </div>
+        <div class="ob-divider"></div>
+        <div class="ob-field">
+          <label class="ob-label">ESG — RENEWABLE ENERGY %</label>
+          <select class="ob-input" id="ob-esg">
+            <option value="">Select...</option>
+            <option>0–25% renewable</option>
+            <option>25–50% renewable</option>
+            <option>50–75% renewable</option>
+            <option>75–99% renewable</option>
+            <option>100% renewable / carbon neutral</option>
+          </select>
+        </div>
+        <div class="ob-nav">
+          <button class="ob-btn-prev" onclick="obPrev(3)">← Back</button>
+          <button class="ob-btn-next" onclick="obNext(3)">Pricing →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 — PRICING -->
+      <div class="ob-section" id="ob-s4">
+        <div class="ob-section-title">Pricing & terms</div>
+        <div class="ob-section-sub">SET YOUR BASE PRICE — BUYERS SEE THIS BEFORE REQUESTING A QUOTE</div>
+        <div class="ob-grid">
+          <div class="ob-field">
+            <label class="ob-label">BASE PRICE ($/MONTH)</label>
+            <input class="ob-input" type="number" id="ob-price" placeholder="e.g. 70000">
+            <div class="ob-hint">All-in monthly cost for the full block</div>
+          </div>
+          <div class="ob-field">
+            <label class="ob-label">PRICE BASIS</label>
+            <select class="ob-input" id="ob-price-basis">
+              <option>Per month (full block)</option>
+              <option>Per kW / month</option>
+              <option>Per rack / month</option>
+            </select>
+          </div>
+        </div>
+        <div class="ob-label" style="margin-bottom:10px">MINIMUM TERM</div>
+        <div class="ob-pricing-row">
+          <div class="ob-price-card sel" onclick="obSelTerm(this,'3')"><div class="ob-price-label">MINIMUM</div><div class="ob-price-val">3 mo</div><div class="ob-price-sub">Most flexible</div></div>
+          <div class="ob-price-card" onclick="obSelTerm(this,'6')"><div class="ob-price-label">MINIMUM</div><div class="ob-price-val">6 mo</div><div class="ob-price-sub">Standard</div></div>
+          <div class="ob-price-card" onclick="obSelTerm(this,'12')"><div class="ob-price-label">MINIMUM</div><div class="ob-price-val">12 mo</div><div class="ob-price-sub">Best yield</div></div>
+        </div>
+        <div class="ob-label" style="margin-bottom:10px">TERM DISCOUNTS (OPTIONAL)</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div class="ob-field" style="flex:1;min-width:120px">
+            <label class="ob-label">6-MONTH DISCOUNT %</label>
+            <input class="ob-input" type="number" id="ob-disc6" placeholder="e.g. 5">
+          </div>
+          <div class="ob-field" style="flex:1;min-width:120px">
+            <label class="ob-label">9-MONTH DISCOUNT %</label>
+            <input class="ob-input" type="number" id="ob-disc9" placeholder="e.g. 8">
+          </div>
+          <div class="ob-field" style="flex:1;min-width:120px">
+            <label class="ob-label">12-MONTH DISCOUNT %</label>
+            <input class="ob-input" type="number" id="ob-disc12" placeholder="e.g. 12">
+          </div>
+        </div>
+        <div class="ob-field">
+          <label class="ob-label">ANYTHING ELSE BUYERS SHOULD KNOW? (OPTIONAL)</label>
+          <textarea class="ob-input" id="ob-notes" placeholder="e.g. Dedicated AI-optimised rows available. Generator backup on site. 24/7 security."></textarea>
+        </div>
+        <div class="ob-nav">
+          <button class="ob-btn-prev" onclick="obPrev(4)">← Back</button>
+          <button class="ob-btn-next" onclick="obNext(4)">Preview listing →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5 — PREVIEW -->
+      <div class="ob-section" id="ob-s5">
+        <div class="ob-section-title">Preview your listing</div>
+        <div class="ob-section-sub">THIS IS HOW BUYERS WILL SEE YOUR BLOCK AT TIER 1</div>
+        <div class="ob-preview" id="ob-preview-card">
+          <div class="ob-preview-label">PREVIEW — PUBLIC LISTING (TIER 1)</div>
+          <div class="ob-preview-name" id="prev-name">—</div>
+          <div class="ob-preview-loc" id="prev-loc">—</div>
+          <div class="ob-preview-metrics">
+            <div><div class="ob-preview-val" id="prev-kw">—</div><div class="ob-preview-key">kW AVAILABLE</div></div>
+            <div><div class="ob-preview-val" id="prev-kw-max">—</div><div class="ob-preview-key">EXPANDABLE TO</div></div>
+            <div><div class="ob-preview-val" id="prev-density">—</div><div class="ob-preview-key">DENSITY</div></div>
+            <div><div class="ob-preview-val" id="prev-price">—</div><div class="ob-preview-key">FROM / MO</div></div>
+          </div>
+          <div id="prev-conn" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"></div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:9px;color:var(--ink3)">YOUR COMPANY NAME AND EXACT LOCATION ARE HIDDEN UNTIL TIER 3 IS UNLOCKED</div>
+        </div>
+        <div class="ob-nav">
+          <button class="ob-btn-prev" onclick="obPrev(5)">← Edit</button>
+          <button class="ob-btn-next" onclick="obSubmit()">Submit listing →</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ob-success" id="ob-success">
+      <div class="ob-success-icon">✓</div>
+      <div class="ob-success-title">Listing submitted</div>
+      <div class="ob-success-sub">WE'LL REVIEW YOUR LISTING WITHIN 24 HOURS.<br>ONCE APPROVED IT GOES LIVE ON THE MARKETPLACE.<br>BUYERS WILL NOT SEE YOUR NAME UNTIL YOU APPROVE EACH INTRODUCTION.</div>
+      <button class="ob-success-btn" onclick="showListings()">← Back to marketplace</button>
+    </div>
+
+  </div>
 </div>
 
 <!-- ══ LISTINGS PAGE ══ -->
@@ -409,6 +746,7 @@ function showDetail(id){
   document.getElementById('page-listings').style.display='none';
   document.getElementById('page-detail').style.display='block';
   document.getElementById('back-btn').style.display='block';
+  document.getElementById('list-btn').style.display='none';
   document.getElementById('mhead-right').style.display='none';
 
   // main content
@@ -582,10 +920,112 @@ function submitDetailQuote(id){
 
 function showListings(){
   document.getElementById('page-detail').style.display='none';
+  document.getElementById('page-onboarding').style.display='none';
   document.getElementById('page-listings').style.display='block';
   document.getElementById('back-btn').style.display='none';
+  document.getElementById('list-btn').style.display='block';
   document.getElementById('mhead-right').style.display='block';
   renderListings();
+}
+
+function showOnboarding(){
+  document.getElementById('page-listings').style.display='none';
+  document.getElementById('page-detail').style.display='none';
+  document.getElementById('page-onboarding').style.display='block';
+  document.getElementById('back-btn').style.display='block';
+  document.getElementById('list-btn').style.display='none';
+  document.getElementById('mhead-right').style.display='none';
+  obGoTo(1);
+}
+
+let obCurrentStep=1;
+let obSelectedTerm='3';
+
+function obGoTo(step){
+  for(let i=1;i<=5;i++){
+    const s=document.getElementById('ob-s'+i);
+    const b=document.getElementById('obs-'+i);
+    if(s) s.classList.toggle('active',i===step);
+    if(b){
+      b.classList.remove('active','done');
+      if(i===step) b.classList.add('active');
+      else if(i<step) b.classList.add('done');
+    }
+  }
+  obCurrentStep=step;
+  if(step===5) obUpdatePreview();
+  window.scrollTo(0,0);
+}
+
+function obNext(step){
+  if(step===1){
+    if(!document.getElementById('ob-company').value.trim()||!document.getElementById('ob-email').value.trim()||!document.getElementById('ob-region').value){
+      alert('Please fill in company name, email and region before continuing.');return;
+    }
+  }
+  if(step===2){
+    if(!document.getElementById('ob-kw').value||!document.getElementById('ob-density').value){
+      alert('Please fill in available kW and rack density before continuing.');return;
+    }
+  }
+  if(step===4){
+    if(!document.getElementById('ob-price').value){
+      alert('Please enter a base price before continuing.');return;
+    }
+  }
+  obGoTo(step+1);
+}
+
+function obPrev(step){obGoTo(step-1)}
+
+function obToggle(row){
+  row.querySelector('.ob-check').classList.toggle('checked');
+}
+
+function obSelTerm(card,term){
+  document.querySelectorAll('.ob-price-card').forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel');
+  obSelectedTerm=term;
+}
+
+function obUpdatePreview(){
+  const company=document.getElementById('ob-company').value||'Your facility';
+  const region=document.getElementById('ob-region').value||'Region TBC';
+  const kw=document.getElementById('ob-kw').value||'—';
+  const kwMax=document.getElementById('ob-kw-max').value||'—';
+  const density=document.getElementById('ob-density').value||'—';
+  const price=document.getElementById('ob-price').value;
+  const city=document.getElementById('ob-city').value;
+
+  document.getElementById('prev-name').textContent=density+' capacity block';
+  document.getElementById('prev-loc').textContent=region+(city?' (exact location revealed at tier 2)':'');
+  document.getElementById('prev-kw').textContent=kw+' kW';
+  document.getElementById('prev-kw-max').textContent=kwMax+' kW';
+  document.getElementById('prev-density').textContent=density.split('(')[0].trim()||'—';
+  document.getElementById('prev-price').textContent=price?'$'+parseInt(price).toLocaleString():'—';
+
+  const connEl=document.getElementById('prev-conn');
+  connEl.innerHTML='';
+  document.querySelectorAll('#ob-conn-list .ob-check.checked').forEach(c=>{
+    const lbl=c.nextElementSibling.textContent;
+    const tag=document.createElement('span');
+    tag.style.cssText='font-family:var(--mono);font-size:9px;padding:3px 8px;border:1px solid var(--rule);border-radius:2px;color:var(--ink3)';
+    tag.textContent=lbl;
+    connEl.appendChild(tag);
+  });
+  document.querySelectorAll('#ob-cert-list .ob-check.checked').forEach(c=>{
+    const lbl=c.nextElementSibling.textContent;
+    const tag=document.createElement('span');
+    tag.style.cssText='font-family:var(--mono);font-size:9px;padding:3px 8px;border:1px solid var(--amber-rule);border-radius:2px;color:var(--amber);background:var(--amber-bg)';
+    tag.textContent=lbl;
+    connEl.appendChild(tag);
+  });
+}
+
+function obSubmit(){
+  document.getElementById('ob-form').style.display='none';
+  document.getElementById('ob-success').style.display='block';
+  document.getElementById('ob-stepbar').style.display='none';
 }
 
 ['fsearch','fregion','fterm'].forEach(id=>document.getElementById(id).addEventListener('input',renderListings));
