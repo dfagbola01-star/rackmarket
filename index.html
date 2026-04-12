@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rack.market — compute capacity marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#faf7f2;--cream2:#f3efe8;--cream3:#ebe5db;
+  --ink:#1a1510;--ink2:#4a4238;--ink3:#8a7e70;--ink4:#b8a898;
+  --rule:#d8cfc2;--green:#1a6b45;--green-bg:#edf5ee;--green-rule:#b8d8be;
+  --amber:#8b5e00;--amber-bg:#fdf3e0;--amber-rule:#e8c870;
+  --blue:#1a3f6b;--blue-bg:#e8eef7;--blue-rule:#a8c0d8;
+  --serif:'Playfair Display',Georgia,serif;
+  --mono:'DM Mono','IBM Plex Mono',monospace;
+  --hv:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+body{background:var(--cream);color:var(--ink);font-family:var(--hv);min-height:100vh}
+
+/* ── SHARED MASTHEAD ── */
+.masthead{border-bottom:3px solid var(--ink);padding:1.5rem 2rem 1rem;display:flex;justify-content:space-between;align-items:flex-end}
+.wordmark{font-family:var(--serif);font-size:32px;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1}
+.wordmark em{font-style:italic}
+.masthead-right{text-align:right}
+.masthead-date{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.06em}
+.masthead-tag{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.1em;margin-top:3px}
+.back-btn{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.06em;cursor:pointer;border:1px solid var(--rule);padding:5px 12px;border-radius:2px;background:transparent;transition:all .15s;display:none}
+.back-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+
+/* ── PAGES ── */
+#page-listings{display:block}
+#page-detail{display:none}
+
+/* ── FILTER STRIP ── */
+.filter-strip{background:var(--ink);padding:.65rem 2rem;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-strip select,.filter-strip input{background:transparent;border:1px solid #444;color:#e0d8cc;font-family:var(--mono);font-size:10px;padding:6px 10px;border-radius:2px;outline:none;letter-spacing:.03em}
+.filter-strip select option{background:#1a1510;color:#e0d8cc}
+.filter-strip input::placeholder{color:#555}
+.filter-strip input:focus,.filter-strip select:focus{border-color:#b8a060}
+.fchip{background:transparent;border:1px solid #444;color:#a09080;font-family:var(--mono);font-size:9px;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.06em;transition:all .15s}
+.fchip:hover{border-color:#b8a060;color:#b8a060}
+.fchip.on{background:#b8a060;border-color:#b8a060;color:#1a1510;font-weight:500}
+.rcount{font-family:var(--mono);font-size:10px;color:#555;margin-left:auto}
+
+/* ── SECTION HEADER ── */
+.section-head{padding:.75rem 2rem;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:12px}
+.section-title{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink2)}
+.section-sub{font-family:var(--mono);font-size:9px;color:var(--ink4);letter-spacing:.08em}
+
+/* ── LISTINGS GRID ── */
+.listings{padding:0 2rem 3rem}
+.listing{border-bottom:1px solid var(--rule);padding:1.75rem 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;cursor:pointer;transition:background .15s}
+.listing:hover{background:var(--cream2);margin:0 -2rem;padding:1.75rem 2rem}
+.listing:last-child{border-bottom:none}
+
+.l-identity{padding-right:2rem;border-right:1px solid var(--rule)}
+.l-eyebrow{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.1em;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.l-status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-avail{background:var(--green)}
+.dot-limited{background:#b86000}
+.dot-reserved{background:#888}
+.l-name{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1.15;color:var(--ink);margin-bottom:4px}
+.l-location{font-family:var(--hv);font-size:12px;color:var(--ink3);margin-bottom:12px}
+.l-conn{display:flex;flex-wrap:wrap;gap:5px}
+.l-conn-tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border:1px solid var(--rule);color:var(--ink3);border-radius:2px;letter-spacing:.04em}
+.l-conn-tag.fiber{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
+.l-conn-tag.ix{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+
+.l-translation{padding:0 2rem;border-right:1px solid var(--rule)}
+.l-trans-head{font-family:var(--mono);font-size:9px;color:var(--ink4);letter-spacing:.1em;margin-bottom:10px}
+.l-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.l-metric-val{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink);line-height:1}
+.l-metric-key{font-family:var(--mono);font-size:9px;color:var(--ink3);margin-top:2px;letter-spacing:.05em}
+.l-benchmarks{background:var(--cream2);border-left:2px solid var(--rule);padding:8px 12px;display:flex;flex-direction:column;gap:5px}
+.l-bench{font-family:var(--hv);font-size:11px;color:var(--ink2);line-height:1.4;display:flex;gap:8px}
+.l-bench-arrow{color:var(--ink4);flex-shrink:0}
+
+.l-pricing{padding-left:2rem}
+.l-price-head{font-family:var(--mono);font-size:9px;color:var(--ink4);letter-spacing:.1em;margin-bottom:10px}
+.l-terms{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.l-term{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border:1px solid var(--rule);cursor:pointer;border-radius:2px;transition:all .15s}
+.l-term:hover{border-color:var(--ink3)}
+.l-term.sel{background:var(--ink);border-color:var(--ink)}
+.l-term-label{font-family:var(--mono);font-size:10px;color:var(--ink2);letter-spacing:.04em}
+.l-term.sel .l-term-label{color:#e0d8cc}
+.l-term-price{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--ink)}
+.l-term.sel .l-term-price{color:#fff}
+.l-term-disc{font-family:var(--mono);font-size:9px;color:var(--green)}
+.l-term.sel .l-term-disc{color:#88c898}
+.l-total{padding-top:12px;border-top:1px solid var(--rule)}
+.l-total-price{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--ink);line-height:1}
+.l-total-sub{font-family:var(--mono);font-size:9px;color:var(--ink3);margin-top:3px;letter-spacing:.04em}
+.l-esg{display:flex;align-items:center;gap:8px;margin-top:10px}
+.l-esg-lbl{font-family:var(--mono);font-size:9px;color:var(--ink4);letter-spacing:.06em}
+.l-esg-track{flex:1;height:2px;background:var(--cream3)}
+.l-esg-fill{height:100%;background:var(--green)}
+.l-esg-val{font-family:var(--mono);font-size:9px;color:var(--ink3)}
+.l-cta{margin-top:12px;width:100%;padding:9px;background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-family:var(--hv);font-size:11px;font-weight:600;letter-spacing:.06em;cursor:pointer;transition:all .15s;border-radius:2px}
+.l-cta:hover{background:var(--ink);color:var(--cream)}
+
+.empty-state{padding:4rem 2rem;text-align:center;font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink4)}
+
+/* ── DETAIL PAGE ── */
+.detail-page{display:grid;grid-template-columns:1fr 380px;min-height:calc(100vh - 72px)}
+.detail-main{border-right:1px solid var(--rule);padding:2rem}
+.detail-sidebar{padding:2rem;background:var(--cream2)}
+
+.tier-bar{display:flex;gap:0;margin-bottom:2rem;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.tier-step{flex:1;padding:8px 12px;text-align:center;background:var(--cream2);border-right:1px solid var(--rule);transition:all .2s}
+.tier-step:last-child{border-right:none}
+.tier-step.active{background:var(--ink);color:var(--cream)}
+.tier-step.unlocked{background:var(--green-bg);border-color:var(--green-rule)}
+.tier-num{font-family:var(--serif);font-size:16px;font-weight:700;display:block}
+.tier-step.active .tier-num{color:var(--cream)}
+.tier-step.unlocked .tier-num{color:var(--green)}
+.tier-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--ink3);display:block;margin-top:1px}
+.tier-step.active .tier-lbl{color:#a09080}
+.tier-step.unlocked .tier-lbl{color:var(--green)}
+
+.d-section{margin-bottom:2rem}
+.d-eyebrow{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.12em;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.eyebrow-rule{flex:1;height:1px;background:var(--rule)}
+.d-title{font-family:var(--serif);font-size:30px;font-weight:700;line-height:1.1;color:var(--ink);margin-bottom:6px}
+.d-region{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-bottom:16px;letter-spacing:.04em}
+
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.cap-card{background:var(--cream);border:1px solid var(--rule);padding:12px;border-radius:2px}
+.cap-val{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--ink)}
+.cap-key{font-family:var(--mono);font-size:9px;color:var(--ink3);margin-top:3px;letter-spacing:.06em}
+
+.flag-row{display:flex;flex-wrap:wrap;gap:6px}
+.flag{font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:2px;letter-spacing:.05em}
+.flag-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-rule)}
+.flag-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-rule)}
+.flag-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-rule)}
+.flag-neutral{background:var(--cream2);color:var(--ink3);border:1px solid var(--rule)}
+
+.esg-row{display:flex;align-items:center;gap:10px;margin-top:12px}
+.esg-lbl{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.06em;white-space:nowrap}
+.esg-track{flex:1;height:3px;background:var(--cream3);border-radius:2px}
+.esg-fill{height:100%;background:var(--green);border-radius:2px}
+.esg-val{font-family:var(--mono);font-size:9px;color:var(--ink3)}
+
+.bench-block{background:var(--cream2);border-left:3px solid var(--ink);padding:14px 16px;margin-top:16px}
+.bench-head{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.1em;margin-bottom:10px}
+.bench-item{display:flex;gap:10px;margin-bottom:8px;align-items:baseline}
+.bench-item:last-child{margin-bottom:0}
+.bench-arrow{font-family:var(--serif);color:var(--ink4);font-size:14px}
+.bench-text{font-family:var(--hv);font-size:12px;color:var(--ink2);line-height:1.4}
+
+.locked-block{position:relative;margin-bottom:2rem}
+.locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(250,247,242,.88);border:1px dashed var(--rule);border-radius:2px;cursor:pointer;transition:all .15s;z-index:2}
+.locked-overlay:hover{background:rgba(250,247,242,.94)}
+.lock-icon{font-size:18px}
+.lock-msg{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.06em;text-align:center;line-height:1.5}
+.lock-cta{font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:.08em;border:1px solid var(--green-rule);padding:4px 12px;border-radius:20px;margin-top:2px}
+.blurred{filter:blur(4px);pointer-events:none;user-select:none}
+
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule)}
+.spec-key{font-family:var(--mono);font-size:10px;color:var(--ink3);padding:10px 14px;border-bottom:1px solid var(--rule);background:var(--cream2);letter-spacing:.04em}
+.spec-val{font-family:var(--hv);font-size:12px;color:var(--ink);padding:10px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule)}
+.spec-key:nth-last-child(2),.spec-val:last-child{border-bottom:none}
+
+.provider-card{background:var(--cream);border:1px solid var(--rule);padding:16px;border-radius:2px;display:flex;gap:14px;align-items:flex-start}
+.provider-initial{width:44px;height:44px;border-radius:2px;background:var(--ink);color:var(--cream);font-family:var(--serif);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.provider-name{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.provider-meta{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.04em;line-height:1.6}
+.verified-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green-bg);border:1px solid var(--green-rule);padding:3px 10px;border-radius:20px;font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:.05em;margin-top:6px}
+
+.sidebar-section{margin-bottom:1.75rem;padding-bottom:1.75rem;border-bottom:1px solid var(--rule)}
+.sidebar-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.sidebar-head{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.sidebar-sub{font-family:var(--mono);font-size:9px;color:var(--ink4);letter-spacing:.08em;margin-bottom:14px}
+
+.term-options{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.term-row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border:1px solid var(--rule);cursor:pointer;border-radius:2px;transition:all .15s}
+.term-row:hover{border-color:var(--ink3)}
+.term-row.sel{background:var(--ink);border-color:var(--ink)}
+.term-name{font-family:var(--mono);font-size:10px;color:var(--ink2);letter-spacing:.04em}
+.term-row.sel .term-name{color:#e0d8cc}
+.term-right{display:flex;align-items:baseline;gap:6px}
+.term-price{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--ink)}
+.term-row.sel .term-price{color:#fff}
+.term-disc{font-family:var(--mono);font-size:9px;color:var(--green)}
+.term-row.sel .term-disc{color:#88c898}
+
+.selected-total{background:var(--ink);color:var(--cream);padding:12px 14px;border-radius:2px;margin-bottom:16px}
+.total-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:#a09080;margin-bottom:4px}
+.total-amount{font-family:var(--serif);font-size:28px;font-weight:700;color:#fff}
+.total-sub{font-family:var(--mono);font-size:9px;color:#a09080;margin-top:3px;letter-spacing:.04em}
+
+.form-field{margin-bottom:12px}
+.form-label{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.08em;display:block;margin-bottom:5px}
+.form-input{width:100%;background:var(--cream);border:1px solid var(--rule);color:var(--ink);font-family:var(--hv);font-size:12px;padding:8px 10px;border-radius:2px;outline:none;transition:border-color .15s}
+.form-input:focus{border-color:var(--ink)}
+.form-input::placeholder{color:var(--ink4)}
+textarea.form-input{resize:vertical;min-height:70px}
+.submit-btn{width:100%;background:var(--ink);color:var(--cream);border:none;font-family:var(--hv);font-size:12px;font-weight:600;letter-spacing:.08em;padding:12px;border-radius:2px;cursor:pointer;transition:all .15s}
+.submit-btn:hover{background:#2a2018}
+.privacy-note{font-family:var(--mono);font-size:9px;color:var(--ink4);text-align:center;margin-top:8px;line-height:1.5;letter-spacing:.03em}
+.success-state{background:var(--green-bg);border:1px solid var(--green-rule);padding:20px;border-radius:2px;text-align:center;display:none;margin-top:12px}
+.success-title{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--green);margin-bottom:6px}
+.success-sub{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.04em;line-height:1.6;opacity:.8}
+</style>
+</head>
+<body>
+
+<!-- ══ MASTHEAD ══ -->
+<div class="masthead">
+  <div class="wordmark">rack<em>.</em>market</div>
+  <div class="masthead-right" id="mhead-right">
+    <div class="masthead-date" id="mdate"></div>
+    <div class="masthead-tag">COMPUTE CAPACITY MARKETPLACE</div>
+  </div>
+  <button class="back-btn" id="back-btn" onclick="showListings()">← ALL LISTINGS</button>
+</div>
+
+<!-- ══ LISTINGS PAGE ══ -->
+<div id="page-listings">
+  <div class="filter-strip">
+    <input type="text" id="fsearch" placeholder="Search provider or city..." style="width:190px">
+    <select id="fregion"><option value="">All regions</option><option value="NA">North America</option><option value="EU">Europe</option><option value="APAC">APAC</option></select>
+    <select id="fterm"><option value="">Any term</option><option value="3">3-month min</option><option value="6">6-month min</option></select>
+    <button class="fchip" id="chip-startup" onclick="toggleChip('startup')">Startup-ready</button>
+    <button class="fchip" id="chip-esg" onclick="toggleChip('esg')">ESG 80+</button>
+    <button class="fchip" id="chip-fiber" onclick="toggleChip('fiber')">Dark fiber</button>
+    <span class="rcount" id="rcount"></span>
+  </div>
+  <div class="section-head">
+    <span class="section-title">Available listings</span>
+    <span class="section-sub">FLEXIBLE TERMS · TRANSPARENT PRICING · NO BROKERS</span>
+  </div>
+  <div class="listings" id="listings"></div>
+</div>
+
+<!-- ══ DETAIL PAGE ══ -->
+<div id="page-detail">
+  <div class="detail-page">
+    <div class="detail-main" id="detail-main"></div>
+    <div class="detail-sidebar" id="detail-sidebar"></div>
+  </div>
+</div>
+
+<script>
+const providers = [
+  {id:1,name:"High-density colo capacity",region_label:"Northern Virginia metro",region:"NA",kw:50,max_kw:200,density:"High-density",status:"available",h100s:20,gpus:160,gpu_ram:5,bench:["Train a 13B parameter model in ~2 weeks","Serve ~30M GPT-3.5 queries/mo at <200ms","Fine-tune Llama 3 70B in under 4 days"],base:70000,conn:["Cross-connect","Dark fiber","Internet exchange"],esg:82,startup:true,terms:{3:0,6:.05,9:.08,12:.12},
+    tier2:{metro:"Ashburn, Virginia (Loudoun County)",power:"2N fully redundant",cooling:"Chilled water + hot aisle containment",density_rack:"30 kW/rack (AI-optimized rows)",connectivity:"Cross-connect, dark fiber, DE-CIX, Equinix Fabric",uplinks:"100G, diverse entry points",certs:"SOC 2 Type II, ISO 27001, PCI-DSS",available:"Within 2 weeks of agreement",expansion:"Right of first refusal up to 200 kW"},
+    tier3:{name:"TierPoint — Atlanta DC",initial:"T",founded:"2010",facilities:"40+ across North America",contact:"infrastructure.sales@tierpoint.com",response:"4 hours",teams:"12 AI teams hosted"}},
+  {id:2,name:"Ultra-high-density colo",region_label:"Northern Virginia metro",region:"NA",kw:120,max_kw:500,density:"Ultra-high-density",status:"limited",h100s:48,gpus:384,gpu_ram:12,bench:["Train a 30B parameter model in ~3 weeks","Serve ~72M GPT-3.5 queries/mo","Support multi-tenant GPU clusters"],base:165000,conn:["Cross-connect","Dark fiber","Internet exchange"],esg:91,startup:true,terms:{3:0,6:.04,9:.07,12:.10},
+    tier2:{metro:"Ashburn, Virginia (Loudoun County)",power:"2N+1 redundant",cooling:"Direct liquid cooling available",density_rack:"40 kW/rack",connectivity:"Cross-connect, Equinix Fabric, Megaport",uplinks:"400G available",certs:"SOC 2 Type II, ISO 27001, HIPAA",available:"Immediately",expansion:"Up to 500 kW on 30 days notice"},
+    tier3:{name:"Equinix DC12",initial:"E",founded:"1998",facilities:"260+ globally",contact:"enterprise@equinix.com",response:"2 hours",teams:"200+ AI teams hosted"}},
+  {id:3,name:"Sustainable high-density colo",region_label:"Amsterdam metro",region:"EU",kw:90,max_kw:300,density:"High-density",status:"available",h100s:36,gpus:288,gpu_ram:9,bench:["Train a 20B model in ~2.5 weeks","Serve ~54M GPT-3.5 queries/mo","EU data residency compliant"],base:95000,conn:["Dark fiber","Internet exchange"],esg:96,startup:true,terms:{3:0,6:.05,9:.09,12:.13},
+    tier2:{metro:"Amsterdam, Netherlands (AMS7 campus)",power:"2N redundant",cooling:"Adiabatic free-cooling",density_rack:"25 kW/rack",connectivity:"Dark fiber, AMS-IX, DE-CIX",uplinks:"100G, carrier-neutral",certs:"SOC 2, ISO 27001, ISO 50001, EU Green Deal aligned",available:"Within 1 week",expansion:"Up to 300 kW"},
+    tier3:{name:"Digital Realty AMS5",initial:"D",founded:"2001",facilities:"300+ globally",contact:"emea-sales@digitalrealty.com",response:"6 hours",teams:"45 AI teams hosted"}},
+  {id:4,name:"Large-scale AI-ready colo",region_label:"Western United States",region:"NA",kw:200,max_kw:1000,density:"High-density",status:"available",h100s:80,gpus:640,gpu_ram:20,bench:["Train a 65B model in ~3 weeks","Serve ~120M GPT-3.5 queries/mo","Hyperscale expansion path available"],base:190000,conn:["Cross-connect","Dark fiber"],esg:100,startup:false,terms:{6:0,9:.05,12:.10},
+    tier2:{metro:"Las Vegas, Nevada",power:"3N redundant",cooling:"Evaporative + chilled water",density_rack:"35 kW/rack",connectivity:"Cross-connect, dark fiber, SWITCH Fabric",uplinks:"400G, diverse entry",certs:"SOC 2 Type II, ISO 27001, FISMA",available:"2-4 weeks",expansion:"Up to 1 MW on 60 days notice"},
+    tier3:{name:"Switch SUPERNAP 8",initial:"S",founded:"2000",facilities:"10 campuses, 3 continents",contact:"sales@switch.com",response:"3 hours",teams:"28 AI teams hosted"}},
+  {id:5,name:"Budget-friendly bare-metal colo",region_label:"Central Europe",region:"EU",kw:50,max_kw:100,density:"Standard",status:"available",h100s:16,gpus:128,gpu_ram:4,bench:["Train a 7B model in ~1 week","Serve ~24M GPT-3.5 queries/mo","Ideal for model experimentation"],base:42000,conn:["Internet exchange"],esg:91,startup:true,terms:{3:0,6:.06,9:.10,12:.15},
+    tier2:{metro:"Falkenstein, Germany",power:"N+1 redundant",cooling:"Hot aisle containment",density_rack:"15 kW/rack",connectivity:"Internet exchange, DE-CIX peering",uplinks:"10G standard, 100G on request",certs:"ISO 27001, ISO 14001",available:"Within 3 days",expansion:"Up to 100 kW"},
+    tier3:{name:"Hetzner FSN-DC",initial:"H",founded:"1997",facilities:"3 campuses in Europe",contact:"sales@hetzner.com",response:"8 hours",teams:"35 AI teams hosted"}},
+  {id:6,name:"APAC high-density colo",region_label:"Osaka metro, Japan",region:"APAC",kw:100,max_kw:400,density:"High-density",status:"limited",h100s:40,gpus:320,gpu_ram:10,bench:["Train a 20B model in ~2 weeks","Serve ~60M GPT-3.5 queries/mo","Low-latency APAC coverage"],base:118000,conn:["Cross-connect","Dark fiber","Internet exchange"],esg:88,startup:true,terms:{3:0,6:.04,9:.07,12:.11},
+    tier2:{metro:"Osaka, Japan (Namba area)",power:"2N redundant",cooling:"Precision air + liquid cooling",density_rack:"25 kW/rack",connectivity:"Cross-connect, JPIX, JPNAP, dark fiber",uplinks:"100G, diverse entry",certs:"SOC 2, ISO 27001, FISC",available:"Within 2 weeks",expansion:"Up to 400 kW"},
+    tier3:{name:"NTT Osaka-2",initial:"N",founded:"1949",facilities:"150+ globally",contact:"apac-dc@ntt.com",response:"4 hours",teams:"22 AI teams hosted"}},
+];
+
+const chips={startup:false,esg:false,fiber:false};
+const selTerms={};
+providers.forEach(p=>{selTerms[p.id]=Object.keys(p.terms).map(Number).sort((a,b)=>a-b)[0]});
+
+document.getElementById('mdate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+
+function toggleChip(k){chips[k]=!chips[k];document.getElementById('chip-'+k).classList.toggle('on',chips[k]);renderListings()}
+
+function price(p,t){return Math.round(p.base*(1-(p.terms[t]||0)))}
+
+function connTag(c){
+  if(c==='Dark fiber') return `<span class="l-conn-tag fiber">Dark fiber</span>`;
+  if(c==='Internet exchange') return `<span class="l-conn-tag ix">IXP</span>`;
+  return `<span class="l-conn-tag">${c}</span>`;
+}
+
+function statusDot(s){
+  const cls=s==='available'?'dot-avail':s==='limited'?'dot-limited':'dot-reserved';
+  const lbl=s==='available'?'AVAILABLE':s==='limited'?'LIMITED SUPPLY':'RESERVED';
+  return `<div class="l-status-dot ${cls}"></div>${lbl}`;
+}
+
+function termRowsListing(p){
+  return Object.keys(p.terms).map(Number).sort((a,b)=>a-b).map(t=>{
+    const disc=p.terms[t];const pr=price(p,t);const sel=selTerms[p.id]===t;
+    const dHtml=disc>0?`<span class="l-term-disc">−${Math.round(disc*100)}%</span>`:'';
+    return `<div class="l-term${sel?' sel':''}" onclick="event.stopPropagation();selTermListing(${p.id},${t})">
+      <span class="l-term-label">${t}-month</span>
+      <div style="display:flex;align-items:baseline;gap:5px">${dHtml}<span class="l-term-price">$${Math.round(pr/1000)}K</span></div>
+    </div>`;
+  }).join('');
+}
+
+function selTermListing(id,t){selTerms[id]=t;renderListings()}
+
+function renderListings(){
+  const q=document.getElementById('fsearch').value.toLowerCase();
+  const reg=document.getElementById('fregion').value;
+  const termF=parseInt(document.getElementById('fterm').value)||0;
+  const filtered=providers.filter(p=>{
+    if(q&&!p.name.toLowerCase().includes(q)&&!p.region_label.toLowerCase().includes(q)) return false;
+    if(reg&&p.region!==reg) return false;
+    if(termF){const mins=Object.keys(p.terms).map(Number).sort((a,b)=>a-b);if(mins[0]>termF) return false;}
+    if(chips.startup&&!p.startup) return false;
+    if(chips.esg&&p.esg<80) return false;
+    if(chips.fiber&&!p.conn.includes('Dark fiber')) return false;
+    return true;
+  });
+  document.getElementById('rcount').textContent=filtered.length+' listings';
+  const el=document.getElementById('listings');
+  if(!filtered.length){el.innerHTML='<div class="empty-state">No listings match your current filters.</div>';return}
+  el.innerHTML=filtered.map(p=>{
+    const t=selTerms[p.id];const pr=price(p,t);
+    return `<div class="listing" onclick="showDetail(${p.id})">
+      <div class="l-identity">
+        <div class="l-eyebrow">${statusDot(p.status)}</div>
+        <div class="l-name">${p.name}</div>
+        <div class="l-location">${p.region_label} · ${p.kw} kW available</div>
+        <div class="l-conn">${p.conn.map(connTag).join('')}</div>
+      </div>
+      <div class="l-translation">
+        <div class="l-trans-head">WHAT THIS MEANS FOR YOUR TEAM</div>
+        <div class="l-metrics">
+          <div><div class="l-metric-val">${p.h100s}</div><div class="l-metric-key">H100 EQUIV.</div></div>
+          <div><div class="l-metric-val">${p.gpus}</div><div class="l-metric-key">TOTAL GPUs</div></div>
+          <div><div class="l-metric-val">${p.gpu_ram} TB</div><div class="l-metric-key">GPU RAM</div></div>
+          <div><div class="l-metric-val">${p.density.split('-')[0]}</div><div class="l-metric-key">DENSITY</div></div>
+        </div>
+        <div class="l-benchmarks">
+          <div class="l-bench"><span class="l-bench-arrow">→</span>${p.bench[0]}</div>
+          <div class="l-bench"><span class="l-bench-arrow">→</span>${p.bench[1]}</div>
+        </div>
+      </div>
+      <div class="l-pricing">
+        <div class="l-price-head">SELECT YOUR TERM</div>
+        <div class="l-terms">${termRowsListing(p)}</div>
+        <div class="l-total">
+          <div class="l-total-price">$${pr.toLocaleString()}<span style="font-size:13px;font-family:var(--hv);font-weight:400;color:var(--ink3)">/mo</span></div>
+          <div class="l-total-sub">${t}-MONTH TERM · NO CAPEX · NO BROKER</div>
+          <div class="l-esg"><span class="l-esg-lbl">ESG</span><div class="l-esg-track"><div class="l-esg-fill" style="width:${p.esg}%"></div></div><span class="l-esg-val">${p.esg}/100</span></div>
+          <button class="l-cta" onclick="event.stopPropagation();showDetail(${p.id})">VIEW FULL LISTING →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── DETAIL PAGE ──
+let detailTier={};
+
+function showDetail(id){
+  const p=providers.find(x=>x.id===id);
+  if(!p) return;
+  detailTier[id]=detailTier[id]||1;
+  const t=selTerms[id];
+  const pr=price(p,t);
+  const tier=detailTier[id];
+
+  document.getElementById('page-listings').style.display='none';
+  document.getElementById('page-detail').style.display='block';
+  document.getElementById('back-btn').style.display='block';
+  document.getElementById('mhead-right').style.display='none';
+
+  // main content
+  document.getElementById('detail-main').innerHTML=`
+    <div class="tier-bar">
+      <div class="tier-step ${tier>=1?'unlocked':''}">
+        <span class="tier-num">①</span><span class="tier-lbl">PUBLIC INFO</span>
+      </div>
+      <div class="tier-step ${tier===2?'active':tier>=2?'unlocked':''}">
+        <span class="tier-num">②</span><span class="tier-lbl">FACILITY DETAIL</span>
+      </div>
+      <div class="tier-step ${tier===3?'active':tier>3?'unlocked':''}">
+        <span class="tier-num">③</span><span class="tier-lbl">PROVIDER REVEALED</span>
+      </div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-eyebrow">TIER 1 — PUBLIC LISTING <div class="eyebrow-rule"></div></div>
+      <div class="d-title">${p.name}<br><em>${p.region_label}</em></div>
+      <div class="d-region">REGION: ${p.region} · STATUS: <span style="color:var(--green);font-family:var(--mono);font-size:9px">● ${p.status.toUpperCase()}</span></div>
+      <div class="cap-grid">
+        <div class="cap-card"><div class="cap-val">${p.kw} kW</div><div class="cap-key">AVAILABLE NOW</div></div>
+        <div class="cap-card"><div class="cap-val">${p.max_kw} kW</div><div class="cap-key">EXPANDABLE TO</div></div>
+        <div class="cap-card"><div class="cap-val">${p.h100s}</div><div class="cap-key">H100 EQUIV.</div></div>
+        <div class="cap-card"><div class="cap-val">${p.gpus}</div><div class="cap-key">TOTAL GPUs</div></div>
+        <div class="cap-card"><div class="cap-val">${p.gpu_ram} TB</div><div class="cap-key">GPU RAM</div></div>
+        <div class="cap-card"><div class="cap-val">${p.esg}/100</div><div class="cap-key">ESG SCORE</div></div>
+      </div>
+      <div class="flag-row">
+        <span class="flag flag-green">Platform verified</span>
+        <span class="flag flag-green">${p.density}</span>
+        ${p.conn.includes('Dark fiber')?'<span class="flag flag-blue">Dark fiber</span>':''}
+        ${p.conn.includes('Internet exchange')?'<span class="flag flag-blue">Internet exchange</span>':''}
+        ${p.conn.includes('Cross-connect')?'<span class="flag flag-neutral">Cross-connect</span>':''}
+        <span class="flag flag-amber">SOC 2 Type II</span>
+        <span class="flag flag-amber">ISO 27001</span>
+        ${p.startup?'<span class="flag flag-neutral">Startup-friendly</span>':''}
+      </div>
+      <div class="esg-row" style="margin-top:16px">
+        <span class="esg-lbl">ESG SCORE</span>
+        <div class="esg-track"><div class="esg-fill" style="width:${p.esg}%"></div></div>
+        <span class="esg-val">${p.esg} / 100</span>
+      </div>
+      <div class="bench-block" style="margin-top:16px">
+        <div class="bench-head">WHAT YOU CAN DO WITH THIS CAPACITY</div>
+        ${p.bench.map(b=>`<div class="bench-item"><span class="bench-arrow">→</span><span class="bench-text">${b}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="d-section locked-block" id="dt2-block">
+      <div class="d-eyebrow">TIER 2 — FACILITY DETAIL <div class="eyebrow-rule"></div></div>
+      <div id="dt2-content" class="${tier<2?'blurred':''}">
+        <div class="spec-grid">
+          <div class="spec-key">Exact metro</div><div class="spec-val">${p.tier2.metro}</div>
+          <div class="spec-key">Power redundancy</div><div class="spec-val">${p.tier2.power}</div>
+          <div class="spec-key">Cooling type</div><div class="spec-val">${p.tier2.cooling}</div>
+          <div class="spec-key">Max density per rack</div><div class="spec-val">${p.tier2.density_rack}</div>
+          <div class="spec-key">Connectivity</div><div class="spec-val">${p.tier2.connectivity}</div>
+          <div class="spec-key">Network uplinks</div><div class="spec-val">${p.tier2.uplinks}</div>
+          <div class="spec-key">Certifications</div><div class="spec-val">${p.tier2.certs}</div>
+          <div class="spec-key">Availability</div><div class="spec-val">${p.tier2.available}</div>
+          <div class="spec-key">Expansion option</div><div class="spec-val">${p.tier2.expansion}</div>
+        </div>
+      </div>
+      ${tier<2?`<div class="locked-overlay" onclick="unlockTier2Detail(${id})">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-msg">FACILITY DETAILS UNLOCK AFTER<br>EXPRESSING INTEREST</div>
+        <div class="lock-cta">EXPRESS INTEREST TO UNLOCK →</div>
+      </div>`:''}
+    </div>
+
+    <div class="d-section locked-block" id="dt3-block">
+      <div class="d-eyebrow">TIER 3 — PROVIDER IDENTITY <div class="eyebrow-rule"></div></div>
+      <div id="dt3-content" class="${tier<3?'blurred':''}">
+        <div class="provider-card">
+          <div class="provider-initial">${p.tier3.initial}</div>
+          <div>
+            <div class="provider-name">${p.tier3.name}</div>
+            <div class="provider-meta">
+              Founded ${p.tier3.founded} · ${p.tier3.facilities}<br>
+              Contact: ${p.tier3.contact}<br>
+              Avg. response: ${p.tier3.response} · ${p.tier3.teams}
+            </div>
+            <div class="verified-badge">✓ PLATFORM VERIFIED PROVIDER</div>
+          </div>
+        </div>
+      </div>
+      ${tier<3?`<div class="locked-overlay" id="dt3-overlay">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-msg">PROVIDER IDENTITY REVEALED<br>AFTER QUOTE REQUEST SUBMITTED</div>
+      </div>`:''}
+    </div>
+  `;
+
+  // sidebar
+  const termRows=Object.keys(p.terms).map(Number).sort((a,b)=>a-b).map(tt=>{
+    const disc=p.terms[tt];const tpr=price(p,tt);const sel=selTerms[id]===tt;
+    const dHtml=disc>0?`<span class="term-disc">−${Math.round(disc*100)}%</span>`:'';
+    return `<div class="term-row${sel?' sel':''}" onclick="selTermDetail(${id},${tt},${tpr})">
+      <span class="term-name">${tt}-month term</span>
+      <div class="term-right">${dHtml}<span class="term-price">$${Math.round(tpr/1000)}K</span></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('detail-sidebar').innerHTML=`
+    <div class="sidebar-section">
+      <div class="sidebar-head">Select your term</div>
+      <div class="sidebar-sub">LONGER TERMS UNLOCK DISCOUNTS</div>
+      <div class="term-options" id="detail-terms">${termRows}</div>
+      <div class="selected-total">
+        <div class="total-lbl">SELECTED MONTHLY COST</div>
+        <div class="total-amount" id="detail-total">$${pr.toLocaleString()}</div>
+        <div class="total-sub" id="detail-total-sub">${t}-MONTH TERM · NO CAPEX · NO BROKER</div>
+      </div>
+    </div>
+    <div class="sidebar-section" id="quote-form-section">
+      <div class="sidebar-head">Request a quote</div>
+      <div class="sidebar-sub" id="fsub-msg">YOUR DETAILS STAY PRIVATE UNTIL PROVIDER ACCEPTS</div>
+      <div class="form-field"><label class="form-label">YOUR NAME</label><input class="form-input" type="text" placeholder="Alex Johnson" id="df-name"></div>
+      <div class="form-field"><label class="form-label">COMPANY</label><input class="form-input" type="text" placeholder="Acme AI" id="df-company"></div>
+      <div class="form-field"><label class="form-label">WORK EMAIL</label><input class="form-input" type="email" placeholder="alex@acmeai.com" id="df-email"></div>
+      <div class="form-field"><label class="form-label">COMPANY TYPE</label>
+        <select class="form-input" id="df-type">
+          <option value="">Select...</option>
+          <option>AI startup (Seed–Series A)</option>
+          <option>AI startup (Series B+)</option>
+          <option>Mid-market tech company</option>
+          <option>Enterprise</option>
+          <option>Research institution</option>
+        </select>
+      </div>
+      <div class="form-field"><label class="form-label">WHAT ARE YOU BUILDING? (OPTIONAL)</label><textarea class="form-input" placeholder="e.g. Fine-tuning open source models for enterprise search..." id="df-usecase"></textarea></div>
+      <button class="submit-btn" id="detail-submit-btn" onclick="submitDetailQuote(${id})">REQUEST QUOTE & UNLOCK PROVIDER →</button>
+      <div class="privacy-note">Your identity is only shared with the provider once they confirm interest. rack.market does not sell your data.</div>
+      <div class="success-state" id="detail-success"></div>
+    </div>
+  `;
+}
+
+function unlockTier2Detail(id){
+  detailTier[id]=2;
+  showDetail(id);
+}
+
+function selTermDetail(id,t,pr){
+  selTerms[id]=t;
+  document.querySelectorAll('#detail-terms .term-row').forEach(r=>r.classList.remove('sel'));
+  event.currentTarget.classList.add('sel');
+  document.getElementById('detail-total').textContent='$'+pr.toLocaleString();
+  document.getElementById('detail-total-sub').textContent=t+'-MONTH TERM · NO CAPEX · NO BROKER';
+}
+
+function submitDetailQuote(id){
+  const name=document.getElementById('df-name').value.trim();
+  const email=document.getElementById('df-email').value.trim();
+  const company=document.getElementById('df-company').value.trim();
+  if(!name||!email||!company){alert('Please fill in your name, company, and email.');return}
+  detailTier[id]=3;
+  document.getElementById('detail-submit-btn').style.display='none';
+  document.getElementById('detail-success').style.display='block';
+  document.getElementById('detail-success').innerHTML=`<div class="success-title">Quote requested</div><div class="success-sub">PROVIDER HAS BEEN NOTIFIED.<br>EXPECT A RESPONSE WITHIN 4 HOURS.<br><br>PROVIDER DETAILS NOW VISIBLE BELOW ↓</div>`;
+  // unlock tier 3
+  const t3content=document.getElementById('dt3-content');
+  const t3overlay=document.getElementById('dt3-overlay');
+  if(t3content) t3content.classList.remove('blurred');
+  if(t3overlay) t3overlay.style.display='none';
+}
+
+function showListings(){
+  document.getElementById('page-detail').style.display='none';
+  document.getElementById('page-listings').style.display='block';
+  document.getElementById('back-btn').style.display='none';
+  document.getElementById('mhead-right').style.display='block';
+  renderListings();
+}
+
+['fsearch','fregion','fterm'].forEach(id=>document.getElementById(id).addEventListener('input',renderListings));
+renderListings();
+</script>
+</body>
+</html>
