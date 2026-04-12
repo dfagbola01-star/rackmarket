@@ -135,7 +135,7 @@ textarea.ob-input{resize:vertical;min-height:80px}
 .l-conn-tag.ix{border-color:var(--green);color:var(--green);background:var(--green-bg)}
 
 .l-translation{padding:0 2rem;border-right:2px solid var(--rule)}
-.l-trans-head{font-family:var(--hv);font-size:12px;color:var(--ink2);letter-spacing:.01em;margin-bottom:12px;font-weight:500;border-bottom:1px solid var(--rule);padding-bottom:8px}
+.l-trans-head{font-family:var(--hv);font-size:12px;color:var(--ink2);letter-spacing:.01em;margin-bottom:12px;font-weight:500;border-bottom:1px solid var(--rule);padding-bottom:8px;text-transform:none}
 .l-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .l-metric-val{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--ink);line-height:1}
 .l-metric-key{font-family:var(--mono);font-size:11px;color:var(--ink2);margin-top:3px;letter-spacing:.04em}
@@ -706,7 +706,7 @@ function renderListings(){
         <div class="l-conn">${p.conn.map(connTag).join('')}</div>
       </div>
       <div class="l-translation">
-        <div class="l-trans-head">WHAT THIS MEANS FOR YOUR TEAM</div>
+        <div class="l-trans-head">What this means for your team</div>
         <div class="l-metrics">
           <div><div class="l-metric-val">${p.h100s}</div><div class="l-metric-key">H100 EQUIV.</div></div>
           <div><div class="l-metric-val">${p.gpus}</div><div class="l-metric-key">TOTAL GPUs</div></div>
