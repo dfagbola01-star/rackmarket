@@ -175,8 +175,7 @@ textarea.ob-input{resize:vertical;min-height:80px}
 
 /* ── MOBILE RESPONSIVE ── */
 @media(max-width:768px){
-  .back-btn{display:none!important}
-  #back-btn.visible{display:block!important}
+  #back-btn:not(.visible){display:none!important}
   .masthead{padding:1rem;flex-wrap:wrap;gap:8px}
   .masthead-left{flex-wrap:wrap;gap:4px}
   .wordmark{font-size:24px}
@@ -318,7 +317,7 @@ textarea.form-input{resize:vertical;min-height:70px}
 <!-- ══ MASTHEAD ══ -->
 <div class="masthead">
   <div class="masthead-left">
-    <div class="wordmark">rack<em>.</em>market</div>
+    <div class="wordmark" onclick="showListings()" style="cursor:pointer">rack<em>.</em>market</div>
     <span class="masthead-divider">|</span>
     <span class="masthead-tagline">a compute capacity marketplace</span>
   </div>
