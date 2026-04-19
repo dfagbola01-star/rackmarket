@@ -918,16 +918,41 @@ function selTermDetail(id,t,pr){
   document.getElementById('detail-total-sub').textContent=t+'-MONTH TERM · NO CAPEX · NO BROKER';
 }
 
-function submitDetailQuote(id){
+async function submitDetailQuote(id){
   const name=document.getElementById('df-name').value.trim();
   const email=document.getElementById('df-email').value.trim();
   const company=document.getElementById('df-company').value.trim();
+  const type=document.getElementById('df-type').value;
+  const usecase=document.getElementById('df-usecase').value.trim();
   if(!name||!email||!company){alert('Please fill in your name, company, and email.');return}
+  const p=providers.find(x=>x.id===id);
+  const term=selTerms[id];
+  const submitBtn=document.getElementById('detail-submit-btn');
+  submitBtn.textContent='Submitting...';
+  submitBtn.disabled=true;
+  try{
+    await fetch('https://formspree.io/f/mrerlbwo',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        form_type:'Quote Request',
+        listing:p?p.name:'Unknown',
+        region:p?p.region_label:'Unknown',
+        capacity:p?p.kw+' kW':'Unknown',
+        selected_term:term+'-month',
+        buyer_name:name,
+        buyer_email:email,
+        buyer_company:company,
+        buyer_type:type||'Not specified',
+        use_case:usecase||'Not provided',
+        source:'rackmarket-nu.vercel.app'
+      })
+    });
+  }catch(e){console.log('Form submission error:',e)}
   detailTier[id]=3;
-  document.getElementById('detail-submit-btn').style.display='none';
+  submitBtn.style.display='none';
   document.getElementById('detail-success').style.display='block';
   document.getElementById('detail-success').innerHTML=`<div class="success-title">Quote requested</div><div class="success-sub">PROVIDER HAS BEEN NOTIFIED.<br>EXPECT A RESPONSE WITHIN 4 HOURS.<br><br>PROVIDER DETAILS NOW VISIBLE BELOW ↓</div>`;
-  // unlock tier 3
   const t3content=document.getElementById('dt3-content');
   const t3overlay=document.getElementById('dt3-overlay');
   if(t3content) t3content.classList.remove('blurred');
@@ -1038,7 +1063,47 @@ function obUpdatePreview(){
   });
 }
 
-function obSubmit(){
+async function obSubmit(){
+  const company=document.getElementById('ob-company').value.trim();
+  const email=document.getElementById('ob-email').value.trim();
+  const region=document.getElementById('ob-region').value;
+  const city=document.getElementById('ob-city').value.trim();
+  const kw=document.getElementById('ob-kw').value;
+  const kwMax=document.getElementById('ob-kw-max').value;
+  const density=document.getElementById('ob-density').value;
+  const power=document.getElementById('ob-power').value;
+  const cooling=document.getElementById('ob-cooling').value;
+  const avail=document.getElementById('ob-avail').value;
+  const price=document.getElementById('ob-price').value;
+  const esg=document.getElementById('ob-esg').value;
+  const notes=document.getElementById('ob-notes').value.trim();
+  const conn=Array.from(document.querySelectorAll('#ob-conn-list .ob-check.checked')).map(c=>c.nextElementSibling.textContent).join(', ');
+  const certs=Array.from(document.querySelectorAll('#ob-cert-list .ob-check.checked')).map(c=>c.nextElementSibling.textContent).join(', ');
+  try{
+    await fetch('https://formspree.io/f/mrerlbwo',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        form_type:'Provider Listing — List Your Space',
+        company_name:company,
+        contact_email:email,
+        metro_region:region,
+        exact_city:city||'Not provided',
+        available_kw:kw+' kW',
+        expandable_to:kwMax?kwMax+' kW':'Not specified',
+        rack_density:density,
+        power_redundancy:power,
+        cooling_type:cooling,
+        availability:avail,
+        base_price:'$'+parseInt(price).toLocaleString()+'/month',
+        esg_renewable:esg||'Not specified',
+        connectivity:conn||'None selected',
+        certifications:certs||'None selected',
+        additional_notes:notes||'None',
+        source:'rackmarket-nu.vercel.app'
+      })
+    });
+  }catch(e){console.log('Form submission error:',e)}
   document.getElementById('ob-form').style.display='none';
   document.getElementById('ob-success').style.display='block';
   document.getElementById('ob-stepbar').style.display='none';
