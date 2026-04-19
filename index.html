@@ -61,8 +61,8 @@ body{background:var(--cream);color:var(--ink);font-family:var(--hv);min-height:1
 textarea.ob-input{resize:vertical;min-height:80px}
 .ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .ob-check-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;cursor:pointer}
-.ob-check{width:16px;height:16px;border:1px solid var(--rule);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green);background:var(--cream);transition:all .15s}
-.ob-check.checked{background:var(--green-bg);border-color:var(--green-rule)}
+.ob-check{width:16px;height:16px;border:1px solid var(--rule);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;background:var(--cream);transition:all .15s}
+.ob-check.checked{background:var(--green-bg);border-color:var(--green-rule);color:var(--green)}
 .ob-check-label{font-family:var(--hv);font-size:13px;color:var(--ink2)}
 .ob-pricing-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
 .ob-price-card{border:1px solid var(--rule);padding:12px;border-radius:2px;cursor:pointer;transition:all .15s}
@@ -906,6 +906,10 @@ function showDetail(id){
 }
 
 function unlockTier2Detail(id){
+  const name=prompt('To unlock facility details, please enter your name:');
+  if(!name||!name.trim()){return}
+  const email=prompt('And your work email:');
+  if(!email||!email.trim()){return}
   detailTier[id]=2;
   showDetail(id);
 }
@@ -931,17 +935,18 @@ async function submitDetailQuote(id){
   submitBtn.textContent='Submitting...';
   submitBtn.disabled=true;
   try{
-    await fetch('https://formspree.io/f/mrerlbwo',{
+    aawait fetch('https://formspree.io/f/mrerlbwo',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
+        _subject:'New quote request — rack.market',
         form_type:'Quote Request',
         listing:p?p.name:'Unknown',
         region:p?p.region_label:'Unknown',
         capacity:p?p.kw+' kW':'Unknown',
         selected_term:term+'-month',
         buyer_name:name,
-        buyer_email:email,
+        email:email,
         buyer_company:company,
         buyer_type:type||'Not specified',
         use_case:usecase||'Not provided',
@@ -1080,13 +1085,14 @@ async function obSubmit(){
   const conn=Array.from(document.querySelectorAll('#ob-conn-list .ob-check.checked')).map(c=>c.nextElementSibling.textContent).join(', ');
   const certs=Array.from(document.querySelectorAll('#ob-cert-list .ob-check.checked')).map(c=>c.nextElementSibling.textContent).join(', ');
   try{
-    await fetch('https://formspree.io/f/mrerlbwo',{
+    aawait fetch('https://formspree.io/f/mrerlbwo',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
+        _subject:'New provider listing — rack.market',
         form_type:'Provider Listing — List Your Space',
         company_name:company,
-        contact_email:email,
+        email:email,
         metro_region:region,
         exact_city:city||'Not provided',
         available_kw:kw+' kW',
