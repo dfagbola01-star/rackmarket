@@ -1080,7 +1080,7 @@ async function obSubmit(){
   const conn=Array.from(document.querySelectorAll('#ob-conn-list .ob-check.checked')).map(c=>c.nextElementSibling.textContent).join(', ');
   const certs=Array.from(document.querySelectorAll('#ob-cert-list .ob-check.checked')).map(c=>c.nextElementSibling.textContent).join(', ');
   try{
-    await fetch('https://formspree.io/f/mrerlbwo',{
+    await fetch('https://formspree.io/f/xlgalgny',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
